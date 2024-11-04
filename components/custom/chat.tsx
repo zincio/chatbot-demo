@@ -1,6 +1,6 @@
 'use client';
 
-import { Attachment, Message } from 'ai';
+import { Message } from 'ai';
 import { useChat } from 'ai/react';
 import { AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
@@ -10,8 +10,6 @@ import { ChatHeader } from '@/components/custom/chat-header';
 import { Message as PreviewMessage } from '@/components/custom/message';
 import { useScrollToBottom } from '@/components/custom/use-scroll-to-bottom';
 
-import { Canvas, UICanvas } from './canvas';
-import { CanvasStreamHandler } from './canvas-stream-handler';
 import { MultimodalInput } from './multimodal-input';
 import { Overview } from './overview';
 
@@ -45,24 +43,8 @@ export function Chat({
   const { width: windowWidth = 1920, height: windowHeight = 1080 } =
     useWindowSize();
 
-  const [canvas, setCanvas] = useState<UICanvas>({
-    documentId: 'init',
-    content: '',
-    title: '',
-    status: 'idle',
-    isVisible: false,
-    boundingBox: {
-      top: windowHeight / 4,
-      left: windowWidth / 4,
-      width: 250,
-      height: 50,
-    },
-  });
-
   const [messagesContainerRef, messagesEndRef] =
     useScrollToBottom<HTMLDivElement>();
-
-  const [attachments, setAttachments] = useState<Array<Attachment>>([]);
 
   return (
     <>
@@ -79,10 +61,7 @@ export function Chat({
               key={message.id}
               role={message.role}
               content={message.content}
-              attachments={message.experimental_attachments}
               toolInvocations={message.toolInvocations}
-              canvas={canvas}
-              setCanvas={setCanvas}
             />
           ))}
 
@@ -98,38 +77,12 @@ export function Chat({
             handleSubmit={handleSubmit}
             isLoading={isLoading}
             stop={stop}
-            attachments={attachments}
-            setAttachments={setAttachments}
             messages={messages}
             setMessages={setMessages}
             append={append}
           />
         </form>
       </div>
-
-      <AnimatePresence>
-        {canvas && canvas.isVisible && (
-          <Canvas
-            input={input}
-            setInput={setInput}
-            handleSubmit={handleSubmit}
-            isLoading={isLoading}
-            stop={stop}
-            attachments={attachments}
-            setAttachments={setAttachments}
-            append={append}
-            canvas={canvas}
-            setCanvas={setCanvas}
-            messages={messages}
-            setMessages={setMessages}
-          />
-        )}
-      </AnimatePresence>
-
-      <CanvasStreamHandler
-        streamingData={streamingData}
-        setCanvas={setCanvas}
-      />
     </>
   );
 }

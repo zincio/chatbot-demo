@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1728598022383,
-      "tag": "0000_keen_devos",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1730207363999,
-      "tag": "0001_sparkling_blue_marvel",
+      "when": 1730748220259,
+      "tag": "0000_perpetual_ricochet",
       "breakpoints": true
     }
   ]

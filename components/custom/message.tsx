@@ -6,26 +6,19 @@ import { motion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
 import { Dispatch, ReactNode, SetStateAction } from 'react';
 
-import { UICanvas } from './canvas';
-import { DocumentToolCall, DocumentToolResult } from './document';
 import { Markdown } from './markdown';
-import { PreviewAttachment } from './preview-attachment';
+import { SearchResults } from './search';
 import { Weather } from './weather';
 
 export const Message = ({
   role,
   content,
   toolInvocations,
-  attachments,
-  canvas,
-  setCanvas,
 }: {
   role: string;
   content: string | ReactNode;
   toolInvocations: Array<ToolInvocation> | undefined;
   attachments?: Array<Attachment>;
-  canvas: UICanvas;
-  setCanvas: Dispatch<SetStateAction<UICanvas>>;
 }) => {
   return (
     <motion.div
@@ -37,11 +30,6 @@ export const Message = ({
       <div
         className={cx(
           'flex gap-4 group-data-[role=user]/message:px-5 w-full group-data-[role=user]/message:w-fit group-data-[role=user]/message:ml-auto group-data-[role=user]/message:max-w-2xl group-data-[role=user]/message:py-3.5 rounded-xl',
-          {
-            'group-data-[role=user]/message:bg-muted': !canvas,
-            'group-data-[role=user]/message:bg-zinc-300 dark:group-data-[role=user]/message:bg-zinc-800':
-              canvas,
-          }
         )}
       >
         {role === 'assistant' && (
@@ -65,70 +53,42 @@ export const Message = ({
                   const { result } = toolInvocation;
 
                   return (
-                    <div key={toolCallId}>
+                    <div key={toolCallId + "-res"}>
+                      <div className="hazard-border mt-1 mb-2">
+                        <h2 className="text-xl font-extrabold mt-1">{toolName} request</h2>
+                        <pre>
+                          {JSON.stringify(args, null, 2)}
+                        </pre>
+                      </div>
                       {toolName === 'getWeather' ? (
                         <Weather weatherAtLocation={result} />
-                      ) : toolName === 'createDocument' ? (
-                        <DocumentToolResult
-                          type="create"
-                          result={result}
-                          canvas={canvas}
-                          setCanvas={setCanvas}
-                        />
-                      ) : toolName === 'updateDocument' ? (
-                        <DocumentToolResult
-                          type="update"
-                          result={result}
-                          canvas={canvas}
-                          setCanvas={setCanvas}
-                        />
-                      ) : toolName === 'requestSuggestions' ? (
-                        <DocumentToolResult
-                          type="request-suggestions"
-                          result={result}
-                          canvas={canvas}
-                          setCanvas={setCanvas}
-                        />
+                      ) : toolName === 'productSearch' ? (
+                        <SearchResults results={result} />
+                      ) : toolName === 'productPurchase2' ? (
+                        <pre>purchase result here</pre>
                       ) : (
-                        <pre>{JSON.stringify(result, null, 2)}</pre>
+                        <div className="hazard-border">
+                          <h2 className="text-xl font-extrabold mt-1">{toolName} response</h2>
+                          <pre>
+                            {JSON.stringify(result, null, 2)}
+                          </pre>
+                        </div>
                       )}
                     </div>
                   );
                 } else {
                   return (
-                    <div
-                      key={toolCallId}
-                      className={cx({
-                        skeleton: ['getWeather'].includes(toolName),
-                      })}
-                    >
-                      {toolName === 'getWeather' ? (
-                        <Weather />
-                      ) : toolName === 'createDocument' ? (
-                        <DocumentToolCall type="create" args={args} />
-                      ) : toolName === 'updateDocument' ? (
-                        <DocumentToolCall type="update" args={args} />
-                      ) : toolName === 'requestSuggestions' ? (
-                        <DocumentToolCall
-                          type="request-suggestions"
-                          args={args}
-                        />
-                      ) : null}
+                    <div key={toolCallId + "-req"}>
+                      <div className="hazard-border">
+                        <h2 className="text-xl font-extrabold mt-1">{toolName} request</h2>
+                        <pre>
+                          {JSON.stringify(args, null, 2)}
+                        </pre>
+                      </div>
                     </div>
                   );
                 }
               })}
-            </div>
-          )}
-
-          {attachments && (
-            <div className="flex flex-row gap-2">
-              {attachments.map((attachment) => (
-                <PreviewAttachment
-                  key={attachment.url}
-                  attachment={attachment}
-                />
-              ))}
             </div>
           )}
         </div>
