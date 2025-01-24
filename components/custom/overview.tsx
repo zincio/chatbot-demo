@@ -38,7 +38,7 @@ export const Overview = () => {
           You can learn more about the Zinc API by visiting the{' '}
           <Link
             className="font-medium underline underline-offset-4"
-            href="https://docs.zincapi.com/#ai"
+            href="https://docs.zincapi.com/#ai-routes"
             target="_blank"
           >
             docs
