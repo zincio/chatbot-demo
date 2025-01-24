@@ -22,7 +22,7 @@ type AllowedTools = 'productSearch' | 'productPurchase' | 'productVariants' | 'p
 
 const allowedTools: AllowedTools[] = ['productSearch', 'productPurchase', 'productVariants', 'productDetails', 'productReviews'];
 
-const ZINCAPI_CREDS = process.env.ZIGGURAT_CREDS || "";
+const ZINCAPI_CREDS = process.env.ZINCAPI_CREDS || "";
 const LIBPOSTAL_CREDS = process.env.LIBPOSTAL_CREDS || "";
 
 interface ZincAddress {
